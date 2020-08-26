@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Built on Python, Flask, Bootstrap 4.5">
+    <meta name="author" content="Swetank Mohanty">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>YouTube Cloud Uploader</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    {% block css %}
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bmc.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet">
+    {% endblock %}
+    <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="shortthirdman" data-description="Support me on Buy me a coffee!"
+        data-message="Thank you for visiting. You can now buy me a coffee!" data-color="#FF813F" data-position="right" data-x_margin="18" data-y_margin="18"></script>
+    <script>
+        function reloadForm() {
+            var form = document.getElementById("form1");
+            form.reset();
+        }
+        function cb(response) {
+            if (response && response.code === 200) {
+                var visits = parseInt(response.value);
+                console.log(visits);
+            }
+        }
+        function renderFooter() {
+            var year = new Date().getFullYear();
+            document.getElementsByClassName('copyright')[0].innerHTML = `&copy; Swetank Mohanty ${year}`;
+        }
+    </script>
+</head>
+
+<body onload="reloadForm(); renderFooter();" class="d-flex flex-column h-100">
+    {% include 'navigation.html' %}
+    <main role="main" class="flex-shrink-0">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4 user-select-none">YouTube Cloud Uploader</h1>
+                <p class="lead user-select-none">Your one-stop solution for downloading YouTube videos directly to Dropbox, Microsoft OneDrive, Google Drive or Amazon S3.</p>
+                <div class="row">
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/yt_icon_rgb.png') }}" alt="YouTube" class="rounded youtube" style="width: 64px;">
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/DropboxGlyph_Blue.svg') }}" alt="Dropbox" class="rounded dropbox" style="width: 64px;">
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/onedrive.svg') }}" alt="OneDrive" class="rounded onedrive" style="width: 96px;">
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/google-drive.svg') }}" alt="Google Drive" class="rounded drive" style="width: 64px;">
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/aws.svg') }}" alt="AWS S3" class="rounded aws" style="width: 80px;">
+                    </div>
+                </div>
+                <div class="row mt-3 mx-1">
+                    <div class="alert alert-danger" role="alert">
+                        Now only Dropbox is supported. Have your Dropbox Access Token keys ready in hand. More cloud storage providers are on the way.
+                    </div>
+                </div>
+                <div class="row pull-right">
+                    <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/shortthirdman">
+                        <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:5px;font-size:24px !important;">Buy me a coffee</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt-4">
+            <form action="/save" method="post" class="form form-signin" id="form1">
+                <fieldset>
+                    <div class="form-label-group">
+                        <input type="text" name="video_url" placeholder="YouTube Video URL" required class="form-control form-control-sm" id="videoUrl" aria-describedby="urlHelp">
+                        <label for="videoUrl">YouTube Video</label>
+                        <small id="urlHelp" class="form-text text-muted">Provide the full YouTube video address</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="row mx-1">Choose your cloud storage provider</div>
+                        <div class="form-check form-check-inline mx-1">
+                            <input class="form-check-input" type="radio" name="providers" id="provider1" value="dropbox" checked>
+                            <label class="form-check-label" for="provider1">Dropbox</label>
+                        </div>
+                        <div class="form-check form-check-inline mx-1">
+                            <input class="form-check-input" type="radio" name="providers" id="provider2" value="gdrive" disabled>
+                            <label class="form-check-label" for="provider2">Google Drive</label>
+                        </div>
+                        <div class="form-check form-check-inline mx-1">
+                            <input class="form-check-input" type="radio" name="providers" id="provider3" value="onedrive" disabled>
+                            <label class="form-check-label" for="provider3">Microsoft OneDrive</label>
+                        </div>
+                        <div class="form-check form-check-inline mx-1">
+                            <input class="form-check-input" type="radio" name="providers" id="provider4" value="awss3" disabled>
+                            <label class="form-check-label" for="provider3">Amazon Web Services S3</label>
+                        </div>
+                    </div>
+                    <div class="form-label-group">
+                        <input type="text" id="inputAccessToken" name="access_token" class="form-control form-control-sm" placeholder="Access token" required aria-describedby="accessTokenHelp">
+                        <label for="inputAccessToken">Dropbox Access Token</label>
+                        <small id="accessTokenHelp" class="form-text text-muted">Get your Dropbox Access Token from
+                            <a href="https://www.dropbox.com/developers/apps">Dropbox.com's App Console</a>
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                </fieldset>
+            </form>
+            <section class="" id="dropbox">
+                <div class="row mx-2">
+                    <p>For Dropbox:</p>
+                    <ul>
+                        <li>Create an app at <a href="https://dropbox.com/developers/apps" target="_blank" rel="noopener noreferrer">https://dropbox.com/developers/apps</a></li>
+                        <li>Generate OAuth2 Access Token. You can generate one for yourself in the App Console.</li>
+                        <li>See <a href="https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account" target="_blank" rel="noopener noreferrer">here</a> for more.</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3" style="background-color: #e9ecef;">
+        <div class="container">
+            <label class="copyright"></label>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/jquery.slim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script async src="https://api.countapi.xyz/hit/example.com/visits?callback=cb"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async src="https://buttons.github.io/buttons.js"></script>
+</body>
+
+</html>
