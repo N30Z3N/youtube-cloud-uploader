@@ -5,11 +5,13 @@ RUN python --version
 RUN pip --version
 
 WORKDIR /usr/app/src
-COPY requirements.txt ./
+COPY ./requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
-COPY main.py ./
-COPY ./static ./
-COPY ./templates ./
+COPY main.py .
+COPY static ./static
+COPY templates ./templates
+
+EXPOSE 8000
 
 ENTRYPOINT [ "gunicorn", "main:app", "--preload", "--max-requests", "1200", "--timeout", "3600" ]

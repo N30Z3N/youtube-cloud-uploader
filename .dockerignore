@@ -1,6 +1,6 @@
 Procfile
 *.md
-*.txt
+runtime.txt
 .git
 .gitignore
 .dockerignore
